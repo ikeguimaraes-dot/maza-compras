@@ -667,12 +667,11 @@ function SidebarNav({ pathname, groups }: { pathname: string; groups: NavGroup[]
       {groups.map((g) => {
         const isOpen = openMap[g.id] ?? g.defaultOpen;
         return (
-          <div key={g.id} style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <details key={g.id} className="sidebar-disclosure" open={isOpen}
+            onToggle={(e) => setOpenMap((prev) => prev[g.id] === e.currentTarget.open ? prev : { ...prev, [g.id]: e.currentTarget.open })}
+            style={{ display: "flex", flexDirection: "column", gap: 1 }}>
             {g.title && (
-              <button
-                type="button"
-                onClick={() => toggleGroup(g.id)}
-                aria-expanded={isOpen}
+              <summary
                 style={{
                   display: "flex", alignItems: "center", gap: 8,
                   width: "100%", background: "transparent", border: "none",
@@ -684,17 +683,17 @@ function SidebarNav({ pathname, groups }: { pathname: string; groups: NavGroup[]
                 {g.icon && <g.icon size={11} style={{ color: "var(--text-3)" }} />}
                 <span style={{ flex: 1 }}>{g.title}</span>
                 <ChevronRight
+                  className="sidebar-disclosure-chevron"
                   size={12}
                   style={{
                     color: "var(--text-3)",
-                    transform: isOpen ? "rotate(90deg)" : "none",
                     transition: hydrated ? "transform var(--t)" : "none",
                   }}
                 />
-              </button>
+              </summary>
             )}
 
-            {isOpen && g.items.map((it, idx) => {
+            {g.items.map((it, idx) => {
               const Icon = it.icon;
 
               // Item with children = collapsible sub-menu
@@ -705,10 +704,9 @@ function SidebarNav({ pathname, groups }: { pathname: string; groups: NavGroup[]
                   (c) => c.href === activeHref || (c.href && pathname.startsWith(c.href + "/")),
                 );
                 return (
-                  <div key={it.label + idx}>
-                    <button
-                      type="button"
-                      onClick={() => toggleSub(subKey)}
+                  <details key={it.label + idx} className="sidebar-disclosure sidebar-subdisclosure" open={subOpen}
+                    onToggle={(e) => setSubOpenMap((prev) => prev[subKey] === e.currentTarget.open ? prev : { ...prev, [subKey]: e.currentTarget.open })}>
+                    <summary
                       style={{
                         display: "flex", alignItems: "center", gap: 12,
                         width: "100%", border: "none", borderRadius: 8,
@@ -726,17 +724,17 @@ function SidebarNav({ pathname, groups }: { pathname: string; groups: NavGroup[]
                       />
                       <span style={{ flex: 1 }}>{it.label}</span>
                       <ChevronRight
+                        className="sidebar-disclosure-chevron"
                         size={12}
                         style={{
                           color: "var(--text-3)",
-                          transform: subOpen ? "rotate(90deg)" : "none",
                           transition: hydrated ? "transform var(--t)" : "none",
                           flexShrink: 0,
                         }}
                       />
-                    </button>
+                    </summary>
 
-                    {subOpen && it.children.map((child) => {
+                    {it.children.map((child) => {
                       const ChildIcon = child.icon;
                       const childActive = child.href === activeHref ||
                         (child.href ? pathname.startsWith(child.href + "/") : false);
@@ -773,7 +771,7 @@ function SidebarNav({ pathname, groups }: { pathname: string; groups: NavGroup[]
                         </NavigationLink>
                       );
                     })}
-                  </div>
+                  </details>
                 );
               }
 
@@ -811,7 +809,7 @@ function SidebarNav({ pathname, groups }: { pathname: string; groups: NavGroup[]
                 </NavigationLink>
               );
             })}
-          </div>
+          </details>
         );
       })}
     </nav>
