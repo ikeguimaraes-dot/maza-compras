@@ -14,7 +14,7 @@ import { formatBRL } from "@/lib/format";
 import { parseFichas, type ParsedFichas, type TextItemLike } from "@/lib/cardapio/parse-fichas";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_COMPRAS_URL ?? "https://kph-os-compras.vercel.app";
+  process.env.NEXT_PUBLIC_COMPRAS_URL ?? "https://maza-compras.vercel.app";
 
 type Stage = "idle" | "parsing" | "preview" | "importing" | "done" | "error";
 
