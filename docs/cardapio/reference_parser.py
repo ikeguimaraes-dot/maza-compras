@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PARSER DE REFERÊNCIA — Ficha Técnica Everest 3.0 (KPH OS / Cardápio)
+PARSER DE REFERÊNCIA — Ficha Técnica Everest 3.0 (MAZA / Cardápio)
 ====================================================================
 Este é o algoritmo VALIDADO de extração das fichas. Use-o como especificação
 para portar a lógica para TypeScript (parse no browser com pdf.js).
