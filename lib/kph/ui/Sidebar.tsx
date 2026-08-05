@@ -440,7 +440,7 @@ export function Sidebar(_props?: {
         {/* Logo */}
         <div style={{ padding: "20px 16px 16px", borderBottom: "1px solid var(--sidebar-border)" }}>
           <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: -0.5 }}>
-            KPH <span style={{ color: "var(--brand)" }}>OS</span>
+            Maza
           </div>
           <div style={{ fontSize: 10, color: "var(--text-3)", marginTop: 2, letterSpacing: 1.2, textTransform: "uppercase", fontWeight: 600 }}>
             Operations
