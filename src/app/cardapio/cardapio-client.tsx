@@ -220,8 +220,8 @@ export function CardapioClient({
                 borderRadius: 6,
                 border: "none",
                 cursor: "pointer",
-                background: tipo === t ? "var(--brand, #D4A574)" : "transparent",
-                color: tipo === t ? "#1a1a1a" : "var(--text-3)",
+                background: tipo === t ? "var(--brand, #C4622D)" : "transparent",
+                color: tipo === t ? "var(--primary-foreground)" : "var(--text-3)",
                 textTransform: "capitalize",
               }}
             >
