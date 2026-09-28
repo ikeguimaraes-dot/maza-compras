@@ -6,6 +6,7 @@
 // Regras do repo: runtime nodejs + CORS em toda resposta + service role.
 
 import { createServiceClient } from "@kph/db/supabase/server";
+import { getCurrentUser } from "@kph/auth/server";
 import {
   UM_MAP,
   type ParsedFichas,
@@ -35,6 +36,7 @@ function json(body: unknown, status = 200) {
 
 const RECONCILE_TOL = 0.02;
 const BATCH = 500;
+const MAX_RECORDS = 25_000;
 const mapUnidade = (um: string) => UM_MAP[um] ?? "un";
 
 interface ImportBody {
@@ -52,6 +54,9 @@ interface Divergencia {
 }
 
 export async function POST(req: Request) {
+  const user = await getCurrentUser();
+  if (!user) return json({ error: "Não autenticado" }, 401);
+
   let body: ImportBody;
   try {
     body = (await req.json()) as ImportBody;
@@ -64,6 +69,19 @@ export async function POST(req: Request) {
   if (!parsed?.produtos || !parsed.insumos || !parsed.linhas) {
     return json({ error: "parsed inválido (esperado {produtos, insumos, linhas})" }, 400);
   }
+  if (![parsed.produtos, parsed.insumos, parsed.linhas].every(Array.isArray)) {
+    return json({ error: "parsed inválido" }, 400);
+  }
+  if (parsed.produtos.length + parsed.insumos.length + parsed.linhas.length > MAX_RECORDS) {
+    return json({ error: "Importação excede o limite de registros" }, 413);
+  }
+
+  const allowed = user.roles.some((role) => {
+    if (role.role === "founder") return true;
+    if (!["gm", "chef", "comprador"].includes(role.role)) return false;
+    return role.unitId === unitId;
+  });
+  if (!allowed) return json({ error: "Acesso negado" }, 403);
 
   const supabase = createServiceClient();
   if (!supabase) return json({ error: "Supabase service role indisponível" }, 500);
